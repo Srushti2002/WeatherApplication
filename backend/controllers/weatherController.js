@@ -10,7 +10,9 @@ const getWeatherByCity = async (req, res) => {
 
   try {
     const apiKey = process.env.OPENWEATHER_API_KEY;
-    const url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric`;
+    const url = `https://api.openweathermap.org/data/2.5/weather?q=${encodeURIComponent(
+      city
+    )}&appid=${apiKey}&units=metric`;
 
     const { data } = await axios.get(url);
 
@@ -63,5 +65,30 @@ const getFiveDayForecast = async (req, res) => {
   }
 };
 
+const getCitySuggestions = async (req, res) => {
+  try {
+    const q = req.query.query || req.query.q || "";
+    if (!q) return res.json([]);
+    const apiKey = process.env.OPENWEATHER_API_KEY;
+    const url = `http://api.openweathermap.org/geo/1.0/direct?q=${encodeURIComponent(
+      q
+    )}&limit=6&appid=${apiKey}`;
 
-module.exports = { getWeatherByCity, getFiveDayForecast };
+    const { data } = await axios.get(url);
+
+    // Normalize suggestions: "Name, State, Country" or "Name, Country"
+    const suggestions = data.map((item) => {
+      const parts = [item.name];
+      if (item.state) parts.push(item.state);
+      if (item.country) parts.push(item.country);
+      return { name: parts.join(", "), lat: item.lat, lon: item.lon };
+    });
+
+    res.json({ suggestions });
+  } catch (error) {
+    console.error(error.message);
+    res.status(500).json({ message: "Error fetching suggestions" });
+  }
+};
+
+module.exports = { getWeatherByCity, getFiveDayForecast, getCitySuggestions};

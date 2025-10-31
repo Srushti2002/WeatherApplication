@@ -65,16 +65,20 @@ export const loginUser = async (userData) => {
     throw new Error(data.message || "Login failed");
   }
 
-  // Store token after successful login
-  if (data) {
-    localStorage.setItem("token", data);
+  // Store token after successful login (expecting { token: "..." })
+  if (data && data.token) {
+    localStorage.setItem("token", data.token);
     window.dispatchEvent(new Event("storage")); // Trigger auth check
+  } else {
+    // Backward compatibility: if backend returns token string directly
+    if (typeof data === "string") {
+      localStorage.setItem("token", data);
+      window.dispatchEvent(new Event("storage"));
+    }
   }
 
   return data;
 };
-
-// ...existing code for logoutUser and other API functions...
 
 // 🔹 Logout user
 export const logoutUser = () => {
@@ -95,8 +99,16 @@ export const addCity = async (cityName) => {
   });
 };
 
-// ✅ Fetch 5-day forecast for a specific city
-// ...existing code...
+// Fetch city suggestions (expects backend route /api/weather/suggest?query=...)
+export const fetchCitySuggestions = async (query) => {
+  if (!query) return [];
+  // fetchWithAuth already returns parsed JSON
+  const data = await fetchWithAuth(`${BASE_URL}/api/weather/suggest?query=${encodeURIComponent(query)}`, {
+    cache: "no-store",
+  });
+
+  return data.suggestions ?? data;
+};
 
 // ✅ Fetch 5-day forecast for a specific city
 export const fetchForecast = async (cityName) => {
@@ -112,8 +124,6 @@ export const fetchForecast = async (cityName) => {
   }
 };
 
-// ...existing code...
-
 // 🔹 Remove a city
 export const removeCity = async (cityId) => {
   return fetchWithAuth(`${BASE_URL}/api/city/${cityId}`, {
@@ -123,7 +133,7 @@ export const removeCity = async (cityId) => {
 
 // 🔹 Get weather data for a city
 export const getWeatherByCity = async (cityName) => {
-  return fetchWithAuth(`${BASE_URL}/api/weather/${cityName}`, {
+  return fetchWithAuth(`${BASE_URL}/api/weather/${encodeURIComponent(cityName)}`, {
     cache: "no-store",
   });
 };
