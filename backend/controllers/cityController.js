@@ -46,7 +46,8 @@ const addCity = async (req, res) => {
     console.error(error.message);
     if (error.response && error.response.status === 404) {
       res.status(404).json({ message: "City not found" });
-    } else {
+    }
+     else {
       res.status(500).json({ message: "Error adding city" });
     }
   }
