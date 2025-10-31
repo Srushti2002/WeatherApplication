@@ -4,22 +4,27 @@ const City = require("../models/City");
 const addCity = async (req, res) => {
   try {
     const { name } = req.body;
-    const userId = req.user.id;
+    const userId = req.user && (req.user._id || req.user.id);
 
     if (!name) {
       return res.status(400).json({ message: "City name is required" });
     }
 
     // Check if city already exists
-    const existingCity = await City.findOne({ name: name.trim(), userId: userId });
+    const existingCity = await City.findOne({
+      name: new RegExp(`^${name.trim()}$`, "i"),
+      userId: userId,
+    });
     if (existingCity) {
       return res.status(400).json({ message: "City already tracked" });
     }
 
     // Fetch weather data from OpenWeatherMap API
     const apiKey = process.env.OPENWEATHER_API_KEY;
-    const url = `https://api.openweathermap.org/data/2.5/weather?q=${name}&appid=${apiKey}&units=metric`;
-
+    const url = `https://api.openweathermap.org/data/2.5/weather?q=${encodeURIComponent(
+      name
+    )}&appid=${apiKey}&units=metric`;
+    
     const { data } = await axios.get(url);
 
     // Create a new City document
@@ -46,7 +51,8 @@ const addCity = async (req, res) => {
     console.error(error.message);
     if (error.response && error.response.status === 404) {
       res.status(404).json({ message: "City not found" });
-    } else {
+    }
+     else {
       res.status(500).json({ message: "Error adding city" });
     }
   }
