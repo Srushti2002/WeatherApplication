@@ -13,7 +13,7 @@ export default function SignupPage() {
       setError("");
       const response = await signupUser(form);
       if (response.token) {
-        router.replace("/dashboard");
+        router.replace("/");
       }
     } catch (err) {
       setError(err.message || "Signup failed. Please try again.");

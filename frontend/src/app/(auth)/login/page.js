@@ -14,7 +14,7 @@ export default function LoginPage() {
       const response = await loginUser(form);
       console.log("Login response:", response);
       if (response) {
-        router.replace("/dashboard");
+        router.replace("/");
       }
     } catch (err) {
       setError(err.message || "Login failed. Please try again.");
