@@ -61,14 +61,48 @@ export default function Navbar() {
                 Home
               </Link>
             </li>
-            <li>
-              <button 
-                onClick={handleLogout} 
-                className="w-full text-left px-4 py-2 hover:bg-gray-100 white:hover:bg-gray-700"
-              >
-                Logout
-              </button>
-            </li>
+            {isAuthenticated() ? (
+              <>
+                <li>
+                  <Link 
+                    href="/dashboard" 
+                    className="block px-4 py-2 hover:bg-gray-100 white:hover:bg-gray-700"
+                    onClick={() => setOpen(false)}
+                  >
+                    Dashboard
+                  </Link>
+                </li>
+                <li>
+                  <button 
+                    onClick={handleLogout} 
+                    className="w-full text-left px-4 py-2 hover:bg-gray-100 white:hover:bg-gray-700"
+                  >
+                    Logout
+                  </button>
+                </li>
+              </>
+            ) : (
+              <>
+                <li>
+                  <Link 
+                    href="/login" 
+                    className="block px-4 py-2 hover:bg-gray-100 white:hover:bg-gray-700"
+                    onClick={() => setOpen(false)}
+                  >
+                    Login
+                  </Link>
+                </li>
+                <li>
+                  <Link 
+                    href="/signup" 
+                    className="block px-4 py-2 hover:bg-gray-100 white:hover:bg-gray-700"
+                    onClick={() => setOpen(false)}
+                  >
+                    Sign Up
+                  </Link>
+                </li>
+              </>
+            )}
           </ul>
         </div>
       )}
