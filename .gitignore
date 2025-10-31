@@ -1,0 +1,82 @@
+# Dependencies
+node_modules/
+frontend/node_modules/
+backend/node_modules/
+/.pnp
+.pnp.js
+frontend/rough.txt
+
+# Testing
+/coverage
+/frontend/coverage
+/backend/coverage
+*.test.js.snap
+
+# Next.js
+/.next/
+/frontend/.next/
+/out/
+/build
+/frontend/build
+
+# Production
+/dist
+/frontend/dist
+/backend/dist
+
+# Environment Variables
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+.env*.local
+
+# Debug Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+logs
+*.log
+
+# IDE and Editor files
+.idea/
+.vscode/
+*.swp
+*.swo
+.DS_Store
+*.pem
+.vs/
+
+# Misc
+rough.txt
+.DS_Store
+Thumbs.db
+.vercel
+
+# TypeScript
+*.tsbuildinfo
+next-env.d.ts
+
+# Cache
+.cache/
+.next/cache/
+
+# Optional npm cache directory
+.npm
+
+# Optional eslint cache
+.eslintcache
+
+# Optional stylelint cache
+.stylelintcache
+
+# Yarn specific
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/sdks
+!.yarn/versions
+.pnp.*
